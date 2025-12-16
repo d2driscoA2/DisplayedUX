@@ -260,13 +260,21 @@
             }
 
             return (
-                <form onSubmit={handleSubmit} className="bg-white rounded-2xl p-8 space-y-6">
+                <form 
+    name="contact" 
+    method="POST" 
+    data-netlify="true"
+    onSubmit={handleSubmit} 
+    className="bg-white rounded-2xl p-8 space-y-6"
+>
+    <input type="hidden" name="form-name" value="contact" />
                     <div className="grid md:grid-cols-2 gap-6">
                         <div>
                             <label className="block text-sm font-medium mb-2" style={{ color: 'var(--brand-gray)' }}>Name *</label>
                             <input
                                 type="text"
                                 required
+                                name="name"
                                 value={formData.name}
                                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                                 className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-blue-500 transition-colors"
@@ -280,6 +288,7 @@
                             <input
                                 type="email"
                                 required
+                                name="email"
                                 value={formData.email}
                                 onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                                 className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-blue-500 transition-colors"
@@ -297,6 +306,7 @@
                         <input
                             type="tel"
                             required
+                            name="phone"
                             value={formData.phone}
                             onChange={handlePhoneChange}
                             className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-blue-500 transition-colors"
@@ -459,6 +469,7 @@
                         <label className="block text-sm font-medium mb-2" style={{ color: 'var(--brand-gray)' }}>Company</label>
                         <input
                             type="text"
+                            name="company"
                             value={formData.company}
                             onChange={(e) => setFormData({ ...formData, company: e.target.value })}
                             className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-blue-500 transition-colors"
@@ -472,6 +483,7 @@
                         <textarea
                             required
                             rows={4}
+                            name"message"
                             value={formData.message}
                             onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                             className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-blue-500 transition-colors resize-none"
