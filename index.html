@@ -224,40 +224,33 @@
                 
                 setIsValidating(true);
                 
-                // Check if TeleSign API is enabled
-                if (TELESIGN_CONFIG.enabled && TELESIGN_CONFIG.customerId && TELESIGN_CONFIG.apiKey) {
-                    try {
-                        // Call real TeleSign API
-                        const auth = btoa(`${TELESIGN_CONFIG.customerId}:${TELESIGN_CONFIG.apiKey}`);
-                        const response = await fetch(
-                            `${TELESIGN_CONFIG.endpoint}${phoneNumber}`,
-                            {
-                                method: 'POST',
-                                headers: {
-                                    'Authorization': `Basic ${auth}`,
-                                    'Content-Type': 'application/x-www-form-urlencoded'
-                                },
-                                body: 'account_lifecycle_event=create'
-                            }
-                        );
-                        
-                        if (response.ok) {
-                            const data = await response.json();
-                            setPhoneValidation(data);
-                            setProgressiveData(null);
-                            setIsValidating(false);
-                            return;
-                        } else {
-                            console.error('TeleSign API error:', response.status);
-                            alert('TeleSign API error. Check your credentials and try again.');
-                        }
-                    } catch (error) {
-                        console.error('TeleSign API error:', error);
-                        alert('TeleSign API error. Check console for details.');
+                try {
+                    // Call Netlify Function instead of TeleSign directly
+                    const response = await fetch('/.netlify/functions/validate-phone', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ phoneNumber })
+                    });
+                    
+                    if (response.ok) {
+                        const data = await response.json();
+                        setPhoneValidation(data);
+                        setProgressiveData(null);
+                        setIsValidating(false);
+                        return;
+                    } else {
+                        const errorData = await response.json();
+                        console.error('Validation error:', errorData);
+                        // Fall back to demo mode on error
                     }
+                } catch (error) {
+                    console.error('Error validating phone:', error);
+                    // Fall back to demo mode
                 }
                 
-                // Demo mode - mock response
+                // Demo mode fallback - mock response
                 await new Promise(resolve => setTimeout(resolve, 1200));
                 
                 const areaCode = phoneNumber.substring(0, 3);
