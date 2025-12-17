@@ -220,64 +220,64 @@
             };
 
             const validatePhone = async (phoneNumber) => {
-                if (!phoneNumber || phoneNumber.length < 10) return;
-                
-                setIsValidating(true);
-                
-                try {
-                    // Call Netlify Function instead of TeleSign directly
-                    const response = await fetch('/.netlify/functions/validate-phone', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({ phoneNumber })
-                    });
-                    
-                    if (response.ok) {
-                        const data = await response.json();
-                        setPhoneValidation(data);
-                        setProgressiveData(null);
-                        setIsValidating(false);
-                        return;
-                    } else {
-                        const errorData = await response.json();
-                        console.error('Validation error:', errorData);
-                        // Fall back to demo mode on error
-                    }
-                } catch (error) {
-                    console.error('Error validating phone:', error);
-                    // Fall back to demo mode
-                }
-                
-                // Demo mode fallback - mock response
-                await new Promise(resolve => setTimeout(resolve, 1200));
-                
-                const areaCode = phoneNumber.substring(0, 3);
-                const cities = {
-                    '773': { city: 'Chicago', state: 'IL' },
-                    '312': { city: 'Chicago', state: 'IL' }, 
-                    '415': { city: 'San Francisco', state: 'CA' },
-                    '212': { city: 'New York', state: 'NY' },
-                    '310': { city: 'Los Angeles', state: 'CA' },
-                    '734': { city: 'Ann Arbor', state: 'MI' }
-                };
-                const location = cities[areaCode] || { city: 'Ann Arbor', state: 'MI' };
-                
-                const mockResponse = {
-                    status: { code: 300, description: "Transaction successfully completed" },
-                    numbering: {
-                        original: { phone_number: phoneNumber, complete_phone_number: `+1${phoneNumber}`, country_code: "1" }
-                    },
-                    phone_type: { code: "2", description: "MOBILE" },
-                    location: location,
-                    risk: { level: "low", score: 150, recommendation: "allow" }
-                };
-                
-                setPhoneValidation(mockResponse);
-                setProgressiveData(null);
-                setIsValidating(false);
-            };
+    if (!phoneNumber || phoneNumber.length < 10) return;
+    
+    setIsValidating(true);
+    
+    try {
+        // Call Netlify Function instead of TeleSign directly
+        const response = await fetch('/.netlify/functions/validate-phone', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ phoneNumber })
+        });
+        
+        if (response.ok) {
+            const data = await response.json();
+            setPhoneValidation(data);
+            setProgressiveData(null);
+            setIsValidating(false);
+            return;
+        } else {
+            const errorData = await response.json();
+            console.error('Validation error:', errorData);
+            // Fall back to demo mode on error
+        }
+    } catch (error) {
+        console.error('Error validating phone:', error);
+        // Fall back to demo mode
+    }
+    
+    // Demo mode fallback - mock response
+    await new Promise(resolve => setTimeout(resolve, 1200));
+    
+    const areaCode = phoneNumber.substring(0, 3);
+    const cities = {
+        '773': { city: 'Chicago', state: 'IL' },
+        '312': { city: 'Chicago', state: 'IL' }, 
+        '415': { city: 'San Francisco', state: 'CA' },
+        '212': { city: 'New York', state: 'NY' },
+        '310': { city: 'Los Angeles', state: 'CA' },
+        '734': { city: 'Ann Arbor', state: 'MI' }
+    };
+    const location = cities[areaCode] || { city: 'Ann Arbor', state: 'MI' };
+    
+    const mockResponse = {
+        status: { code: 300, description: "Transaction successfully completed" },
+        numbering: {
+            original: { phone_number: phoneNumber, complete_phone_number: `+1${phoneNumber}`, country_code: "1" }
+        },
+        phone_type: { code: "2", description: "MOBILE" },
+        location: location,
+        risk: { level: "low", score: 150, recommendation: "allow" }
+    };
+    
+    setPhoneValidation(mockResponse);
+    setProgressiveData(null);
+    setIsValidating(false);
+};
 
             const handlePhoneChange = (e) => {
                 const phone = e.target.value.replace(/\D/g, '');
