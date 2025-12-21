@@ -290,6 +290,22 @@
 
             const handleSubmit = async (e) => {
                 e.preventDefault();
+                
+                // Submit to Netlify
+                try {
+                    const formData = new FormData(e.target);
+                    
+                    await fetch('/', {
+                        method: 'POST',
+                        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                        body: new URLSearchParams(formData).toString()
+                    });
+                    
+                    console.log('Form submitted to Netlify successfully');
+                } catch (error) {
+                    console.error('Netlify submission error:', error);
+                }
+                
                 setSubmitted(true);
             };
 
@@ -354,7 +370,10 @@
             }
 
             return (
-                <form onSubmit={handleSubmit} className="bg-white rounded-2xl sm:rounded-3xl p-6 sm:p-8 space-y-4 sm:space-y-6">
+                <form name="contact" method="POST" data-netlify="true" onSubmit={handleSubmit} className="bg-white rounded-2xl sm:rounded-3xl p-6 sm:p-8 space-y-4 sm:space-y-6">
+                    {/* Hidden input for Netlify form detection */}
+                    <input type="hidden" name="form-name" value="contact" />
+                    
                     <div>
                         <label className="block text-sm font-medium mb-2" style={{ color: 'var(--brand-gray)' }}>Name *</label>
                         <input
@@ -1417,4 +1436,5 @@
     </script>
 </body>
 </html>
+
 
